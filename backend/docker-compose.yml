@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      # Mount app code for development (code changes reflect without rebuild)
+      - ./app:/app/app
+      # Mount .env file for configuration
+      - ./.env:/app/.env
+      # Mount static directory for audio file persistence
+      - ./static:/app/static
+    environment:
+      # Environment variables will be loaded from .env file
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped

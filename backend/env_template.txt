@@ -1,0 +1,32 @@
+# LLM Configuration
+LLM_PROVIDER=azure_openai
+# For Azure OpenAI (recommended)
+AZURE_OPENAI_API_KEY=your_azure_openai_api_key_here
+AZURE_OPENAI_ENDPOINT=https://your-resource.openai.azure.com/
+AZURE_OPENAI_DEPLOYMENT=your-deployment-name-here
+AZURE_OPENAI_API_VERSION=2024-02-15-preview
+# For regular OpenAI (alternative)
+OPENAI_API_KEY=your_openai_api_key_here
+# For Anthropic Claude (alternative)
+ANTHROPIC_API_KEY=your_anthropic_api_key_here
+LLM_MODEL=gpt-4o
+
+# TTS Configuration
+TTS_PROVIDER=azure
+AZURE_SPEECH_KEY=your_azure_speech_key_here
+AZURE_SPEECH_REGION=eastasia
+OPENAI_API_KEY_TTS=your_openai_api_key_here
+
+# Voice Mapping (Azure)
+AZURE_VOICE_MALE=zh-HK-WanLungNeural
+AZURE_VOICE_FEMALE=zh-HK-HiuGaaiNeural
+
+# Server Configuration
+HOST=0.0.0.0
+PORT=8000
+CORS_ORIGINS=http://localhost:3000,http://localhost:3001
+
+# File Storage
+AUDIO_STORAGE_PATH=./static/audio
+MAX_PDF_PAGES=10
+
