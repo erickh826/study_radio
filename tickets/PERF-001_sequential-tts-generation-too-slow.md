@@ -2,7 +2,7 @@
 id: PERF-001
 type: performance
 severity: high
-status: open
+status: closed
 files:
   - backend/app/services/tts_service.py:114
 ---

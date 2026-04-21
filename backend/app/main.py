@@ -15,6 +15,7 @@ from app.models import GenerateRequest, GenerateResponse, ScriptItem
 from app.services.pdf_service import extract_text_from_pdf
 from app.services.llm_service import generate_script
 from app.services.tts_service import generate_audio
+from app.services.vector_db_service import store_document
 from app.debug_logger import log_debug
 
 
@@ -136,17 +137,15 @@ async def upload_file(
         
         if not text_content.strip():
             raise HTTPException(status_code=400, detail="No text extracted from file")
-        
+
+        # Store document in Vector DB for Phase 2 RAG (Agent B)
+        store_document(job_id, text_content)
+
         # Generate script
-        # #region agent log
-        log_debug("debug-session", "run1", "F", "main.py:92", "About to call generate_script", {
-            "text_length": len(text_content)
-        })
-        # #endregion
         script = await generate_script(text_content, course_name)
-        
+
         # Generate audio
-        audio_file_path = await generate_audio(script, job_id)
+        await generate_audio(script, job_id)
         audio_url = f"/static/audio/{job_id}.mp3"
         
         return GenerateResponse(
@@ -220,13 +219,11 @@ async def health():
         "llm_provider": settings.llm_provider,
         "tts_provider": settings.tts_provider,
         "llm_configured": bool(
-            (settings.llm_provider == "openai" and settings.openai_api_key) or
             (settings.llm_provider == "azure_openai" and settings.azure_openai_api_key and settings.azure_openai_endpoint and settings.azure_openai_deployment) or
             (settings.llm_provider == "anthropic" and settings.anthropic_api_key)
         ),
         "tts_configured": bool(
-            (settings.tts_provider == "azure" and settings.azure_speech_key) or
-            (settings.tts_provider == "openai" and settings.openai_api_key)
+            settings.tts_provider == "azure" and settings.azure_speech_key
         )
     }
 

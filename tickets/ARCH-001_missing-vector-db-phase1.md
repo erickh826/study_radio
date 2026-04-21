@@ -2,7 +2,7 @@
 id: ARCH-001
 type: architecture
 severity: high
-status: open
+status: closed
 phase: 1
 files:
   - backend/app/main.py

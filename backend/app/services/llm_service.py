@@ -66,9 +66,7 @@ async def generate_script(source_text: str, course_name: Optional[str] = None) -
     
     prompt = AGENT_A_PROMPT_TEMPLATE.format(source_text=truncated_text)
     
-    if settings.llm_provider == "openai":
-        script_json = await _call_openai(prompt)
-    elif settings.llm_provider == "azure_openai":
+    if settings.llm_provider == "azure_openai":
         script_json = await _call_azure_openai(prompt)
     elif settings.llm_provider == "anthropic":
         script_json = await _call_anthropic(prompt)
@@ -228,40 +226,6 @@ async def generate_script(source_text: str, course_name: Optional[str] = None) -
         # #endregion
         raise ValueError(f"Error parsing script: {e}")
 
-
-async def _call_openai(prompt: str) -> str:
-    """Call OpenAI API"""
-    from openai import AsyncAzureOpenAI
-    
-    if not settings.openai_api_key:
-        raise ValueError("OpenAI API key not configured")
-    
-    client = AsyncAzureOpenAI(api_key=settings.openai_api_key)
-    
-    response = await client.chat.completions.create(
-        model=settings.llm_model,
-        messages=[
-            {"role": "system", "content": "You are a helpful assistant that outputs only valid JSON."},
-            {"role": "user", "content": prompt}
-        ],
-        temperature=0.7,
-        response_format={"type": "json_object"} if "gpt-4" in settings.llm_model.lower() else None
-    )
-    
-    content = response.choices[0].message.content
-    
-    # If response_format was used, wrap array in object, otherwise extract array
-    try:
-        parsed = json.loads(content)
-        if isinstance(parsed, dict) and "script" in parsed:
-            return json.dumps(parsed["script"])
-        elif isinstance(parsed, list):
-            return content
-        else:
-            # Try to find array in response
-            return content
-    except:
-        return content
 
 
 async def _call_azure_openai(prompt: str) -> str:

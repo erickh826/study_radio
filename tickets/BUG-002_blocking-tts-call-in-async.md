@@ -2,7 +2,7 @@
 id: BUG-002
 type: bug
 severity: high
-status: open
+status: closed
 files:
   - backend/app/services/tts_service.py:165
 ---

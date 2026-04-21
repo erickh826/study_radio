@@ -2,7 +2,7 @@
 id: BUG-001
 type: bug
 severity: high
-status: open
+status: closed (resolved by deletion)
 files:
   - backend/app/services/llm_service.py:234
   - backend/app/services/tts_service.py:297
